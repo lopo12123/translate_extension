@@ -1,0 +1,31 @@
+{
+    "manifest_version": 2,
+    "name": "xixi",
+    "version": "1.0.0",
+    "description": "",
+    "author": "lopo",
+    "browser_action": {
+        "default_icon": "logo.png",
+        "default_title": "XiXi",
+        "default_popup": "hello.html"
+    },
+    "permissions": [
+        "contextMenus"
+    ],
+    "content_scripts": [
+        {
+            "matches": [
+                "<all_urls>"
+            ],
+            "js": [
+                "front.js"
+            ]
+        }
+    ],
+    "background": {
+        "scripts": [
+            "background.js"
+        ],
+        "persistent": false
+    }
+}
