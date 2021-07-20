@@ -26,8 +26,11 @@ function createDragableBox() {
     
     // set box`s style
     box.style.position = 'absolute'
-    box.style.width = '40px'
-    box.style.height = '40px'
+    box.style.zIndex = '10000'
+    box.style.width = '88px'
+    box.style.height = '100px'
+    box.style.backgroundImage = 'url(https://cdn.jsdelivr.net/gh/lopo12123/PHOTOS/HollowKnight/knight_small.png)'
+    box.style.backgroundSize = 'contain'
     box.style.userSelect = 'none'
     box.style.outline = 'solid 2px gainsboro'
     box.style.display = 'flex'
@@ -35,7 +38,7 @@ function createDragableBox() {
     box.style.alignItems = 'center'
     
     box.style.borderRadius = '5px'
-    box.style.backgroundColor = 'aliceblue'
+    box.style.backgroundColor = 'red'
     box.style.opacity = '0.6'
 
     // set box`s move event

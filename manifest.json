@@ -12,6 +12,9 @@
     "permissions": [
         "contextMenus"
     ],
+    "web_accessible_resources": [
+        "https://cdn.jsdelivr.net/gh/lopo12123/PHOTOS/HollowKnight/knight_small.png"
+    ],
     "content_scripts": [
         {
             "matches": [
