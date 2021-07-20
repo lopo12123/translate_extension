@@ -1,12 +1,12 @@
 {
     "manifest_version": 2,
-    "name": "xixi",
+    "name": "test",
     "version": "1.0.0",
     "description": "",
     "author": "lopo",
     "browser_action": {
         "default_icon": "logo.png",
-        "default_title": "XiXi",
+        "default_title": "lopo",
         "default_popup": "hello.html"
     },
     "permissions": [

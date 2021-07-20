@@ -2,15 +2,16 @@
 // + 注入页面的脚本
 // +
 
-/** @description 注入当前页面后通知后台 */
+/** @description 注入当前页面后通知后台创建contextmenu项目 */
 (function() {
-    console.log('[lopo]: success in <' + document.title + '>');
+    _log('success', 'inject scripts')
     
     chrome.runtime.sendMessage(
         {type: 'onload'},
         (response) => {
-            console.log(response);
-        })
+            _log(response.type, response.msg)
+        }
+    )
 })()
 
 
@@ -18,16 +19,7 @@
 
 
 
-
-
-
-
-
-chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
-    console.log(msg)
-
-    sendResponse('send back')
-
-    return false
-
-})
+/** @description log some msg in the console */
+function _log(type, msg) {
+    console.log('[LOPO]: <' + type + '> ' + JSON.stringify(msg) + '!')
+}
