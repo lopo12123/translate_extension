@@ -1,4 +1,8 @@
-// 后台运行的脚本
+/**
+ * @author lopo
+ * @version 1.0.0
+ * @description 后台运行的脚本
+ */
 
 /** @description 插件附加菜单列表 */
 const contextMenuItem = ["TRANSLATE IT!"]
@@ -14,6 +18,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
                         "title": item + " [%s]",
                         "type": "normal",
                         "contexts": ["selection"]
+                        // "contexts": [""]
                     }
                 )
             })
@@ -24,9 +29,12 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     }
 })
 
-chrome.contextMenus.onClicked.addListener((info, tab) => {
 
+
+chrome.windows.onFocusChanged.addListener((windowId) => {
+    
 })
+
 
 
 // chrome.contextMenus.onClicked.addListener(function(info, tab) {
@@ -40,5 +48,3 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 //         )
 //     }
 // })
-
-
