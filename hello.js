@@ -1,13 +1,11 @@
 //  hello.html 中的脚本
 
-chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
-    doTranslate(msg.text, msg.target, sendResponse)
-
-    return true  // return true to open port for sender until sendResponse was called
+chrome.runtime.onMessage.addListener((msg) => {
+    doTranslate(msg.text, msg.target)
 })
 
 /** @description 受跨域限制, 在此处进行XHR请求并返回给页面脚本 */
-function doTranslate(text, target = 'en', callBack) {
+function doTranslate(text, target = 'en') {
     const appid = '20210527000844564';
     const key = 'pZ8Ero_Ai8lH6uB1N1On';
     const salt = (new Date).getTime()
@@ -19,10 +17,23 @@ function doTranslate(text, target = 'en', callBack) {
     let xhr = new XMLHttpRequest()
     xhr.open('GET', url+params)
     xhr.onload = (e) => {
-        callBack({ result: JSON.parse(e.target.response) })
+        sendBack({ type: 'solved', result: JSON.parse(e.target.response) })
     }
     xhr.send()
 }
+
+/** @description `send message from hello.js to front.js` use chrome.tabs.sendMessage */
+function sendBack(msg) {
+    chrome.tabs.query(
+        { active: true, currentWindow: true },
+        (idList) => {
+            console.log('id list: ', idList)
+
+            chrome.tabs.sendMessage(idList[0].id, msg)
+        }
+    )
+}
+
 
 /** @description MD5 */
 function MD5(string) {

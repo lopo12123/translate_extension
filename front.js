@@ -16,12 +16,24 @@
         }
     )
 
-    // 事件处理
-    chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
-        if(msg.type === 'translate') {
+    // contextMenu 事件处理
+    chrome.runtime.onMessage.addListener((msg) => {
+        if(msg.type === 'translate') {  // 请求翻译
             let text = window.getSelection().toString()
-
-            doTranslate(text, msg.target)
+            let target = msg.target ?? 'en'
+            
+            // 发送给 hello.js 进行 XHR 请求; 并对 type=solve 进行监听来获取结果
+            chrome.runtime.sendMessage({type: 'xhr', text, target})
+        }
+        else if(msg.type === 'solved') {  // 翻译完成
+            let result = msg.result.trans_result[0].dst
+            
+            // update result and show(if hide)
+            if(document.getElementById('result').style.display == 'none') {
+                document.getElementById('container').style.height = '200px'
+                document.getElementById('result').style.display = 'block'
+            }
+            document.getElementById('result').value = result
         }
     })
 })()
@@ -98,23 +110,6 @@ function createDragableBox() {
     container.appendChild(charactor)
     container.appendChild(result)
     document.body.appendChild(container)
-}
-
-/** @description 翻译并将结果更新到 result element 中 */
-function doTranslate(text, target='en') {
-    chrome.runtime.sendMessage(
-        {type: 'xhr', text, target},
-        (response) => {
-            let result = response.result.trans_result[0].dst
-            
-            // update result and show(if hide)
-            if(document.getElementById('result').style.display == 'none') {
-                document.getElementById('container').style.height = '200px'
-                document.getElementById('result').style.display = 'block'
-            }
-            document.getElementById('result').value = result
-        }
-    )
 }
 
 /** @description 在当前窗口的控制台以一定格式打印信息 */
