@@ -1,8 +1,8 @@
 //  hello.html 中的脚本
 
-chrome.runtime.onMessage.addListener((msg) => {
-    doTranslate(msg.text, msg.target)
-})
+// chrome.runtime.onMessage.addListener((msg) => {
+//     doTranslate(msg.text, msg.target)
+// })
 
 /** @description 受跨域限制, 在此处进行XHR请求并返回给页面脚本 */
 function doTranslate(text, target = 'en') {
