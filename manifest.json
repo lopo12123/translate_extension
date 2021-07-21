@@ -13,7 +13,8 @@
         "contextMenus"
     ],
     "web_accessible_resources": [
-        "https://cdn.jsdelivr.net/gh/lopo12123/PHOTOS/HollowKnight/knight_small.png"
+        "https://cdn.jsdelivr.net/gh/lopo12123/PHOTOS/HollowKnight/knight_small.png",
+        "https://unpkg.com/axios/dist/axios.min.js"
     ],
     "content_scripts": [
         {

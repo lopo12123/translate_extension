@@ -100,39 +100,21 @@ function createDragableBox() {
     document.body.appendChild(container)
 }
 
-/** @description 翻译并将结果返回 */
-function doTranslate(text, target='翻译中') {
-    const url = 'http://api.fanyi.baidu.com/api/trans/vip/translate'
-    const appid = '20210527000844564';
-    const key = 'pZ8Ero_Ai8lH6uB1N1On';
-    const salt = (new Date()).getTime()
-    const sign = MD5(appid + text + salt + key)
-    
-    // let params = {
-    //     appid,
-    //     salt,
-    //     sign,
-    //     q: text,
-    //     from: 'auto',
-    //     to: target
-    // }
-    let params = '?appid=' + appid + '&salt=' + salt + '&sign=' + sign + '&q=' + text + 'from=auto&to=' + target
-
-    // let xhr = new XMLHttpRequest()
-    // xhr.open('GET', url + params)
-    // xhr.onload = (e) => {
-    //     console.log(e);
-    // }
-    // xhr.send()
-
-    let result = 'have not completed yet!'
-
-    // update result and show(if hide)
-    if(document.getElementById('result').style.display == 'none') {
-        document.getElementById('container').style.height = '200px'
-        document.getElementById('result').style.display = 'block'
-    }
-    document.getElementById('result').value = result
+/** @description 翻译并将结果更新到 result element 中 */
+function doTranslate(text, target='en') {
+    chrome.runtime.sendMessage(
+        {type: 'xhr', text, target},
+        (response) => {
+            let result = response.result.trans_result[0].dst
+            
+            // update result and show(if hide)
+            if(document.getElementById('result').style.display == 'none') {
+                document.getElementById('container').style.height = '200px'
+                document.getElementById('result').style.display = 'block'
+            }
+            document.getElementById('result').value = result
+        }
+    )
 }
 
 /** @description 在当前窗口的控制台以一定格式打印信息 */
