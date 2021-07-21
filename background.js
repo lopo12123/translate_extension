@@ -1,24 +1,21 @@
 /**
- * @author lopo
- * @version 1.0.0
  * @description 后台运行的脚本
  */
 
 /** @description 插件附加菜单列表 */
-const contextMenuItem = ["TRANSLATE IT!"]
+const contextMenuItem = ["[zh-CN] -> [en]", "[en] -> [zh-CN]"]
 
 /** @description 事件处理 */
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
-    if(msg.type === 'onload') {  // 刚就绪
+    if(msg.type === 'onload') {  // 就绪
         try {
-            contextMenuItem.map((item, index, arr) => {
+            contextMenuItem.map((item, index, arr) => {  // 创建右键菜单
                 chrome.contextMenus.create(
                     {
                         "id": "menu" + index,
-                        "title": item + " [%s]",
+                        "title": item,
                         "type": "normal",
                         "contexts": ["selection"]
-                        // "contexts": [""]
                     }
                 )
             })
@@ -29,22 +26,17 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     }
 })
 
-
-
-chrome.windows.onFocusChanged.addListener((windowId) => {
-    
+// 右键菜单事件
+chrome.contextMenus.onClicked.addListener((info, tab) => {
+    if(info.menuItemId === 'menu0') {  // zh to en
+        chrome.tabs.sendMessage( tab.id, { type: 'translate', target: 'en', info, tab } )
+    }
+    else if(info.menuItemId === 'menu1') {  // en to zh
+        chrome.tabs.sendMessage( tab.id, { type: 'translate', target: 'zh', info, tab } )
+    }
 })
 
-
-
-// chrome.contextMenus.onClicked.addListener(function(info, tab) {
-//     if(info.menuItemId === '0') {
-//         chrome.tabs.sendMessage(
-//             tab.id,
-//             { info, tab },
-//             (response) => {
-//                 console.log(response);
-//             }
-//         )
-//     }
+// 改: feat: 在此添加生命周期
+// chrome.windows.onFocusChanged.addListener((windowId) => {
+    
 // })
