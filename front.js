@@ -28,51 +28,76 @@
 
 /** @description 创建可拖拽的容器并设置可拖拽 */
 function createDragableBox() {
-    // create element
-    let box = document.createElement('div')
-    box.id = 'box'
-    
-    // set box`s style
-    box.style.position = 'absolute'
-    box.style.zIndex = '10000'
-    box.style.width = '88px'
-    box.style.height = '100px'
-    box.style.bottom = '10vh'
-    box.style.left = '10vw'
-    box.style.backgroundImage = 'url(https://cdn.jsdelivr.net/gh/lopo12123/PHOTOS/HollowKnight/knight_small.png)'
-    box.style.backgroundSize = 'contain'
-    box.style.userSelect = 'none'
-    box.style.display = 'flex'
-    box.style.justifyContent = 'center'
-    box.style.alignItems = 'center'
-    box.style.opacity = '0.6'
-    box.onmouseover = (e) => {
-        box.style.outline = 'dashed 1px #afb4b9'
+    // 1. create element
+    // 1.1 create container div
+    let container = document.createElement('div')
+    container.id = 'container'
+    // 1.2 create character element
+    let charactor = document.createElement('div')
+    charactor.id = 'charactor'
+    // 1.3 create result element
+    let result = document.createElement('textarea')
+    result.id = 'result'
+    result.disabled = true
+
+    // 2. set style
+    // 2.1 set container`s style
+    container.style.position = 'absolute'
+    container.style.zIndex = '10000'
+    container.style.width = '200px'
+    container.style.height = '88px'
+    container.style.left = '10vw'
+    container.style.bottom = '10vh'
+    container.style.userSelect = 'none'
+    // 2.2 set charactor`s style
+    charactor.style.position = 'absolute'
+    charactor.style.width = '88px'
+    charactor.style.height = '100px'
+    charactor.style.bottom = '0'
+    charactor.style.left = '0'
+    charactor.style.backgroundImage = 'url(https://cdn.jsdelivr.net/gh/lopo12123/PHOTOS/HollowKnight/knight_small.png)'
+    charactor.style.backgroundSize = 'contain'
+    charactor.style.opacity = '0.6'
+    charactor.onmouseover = (e) => {
+        charactor.style.outline = 'dashed 1px #afb4b9'
     }
-    box.onmouseout = (e) => {
-        box.style.outline = 'none'
+    charactor.onmouseout = (e) => {
+        charactor.style.outline = 'none'
     }
-    
-    // set box`s move event
-    box.onmousedown = (eDown) => {
+    // 2.3 set textarea`s style
+    result.style.position = 'absolute'
+    result.style.width = '200px'
+    result.style.height = '80px'
+    result.style.padding = '5px'
+    result.style.top = '0'
+    result.style.right = '0'
+    result.style.borderRadius = '5px'
+    result.style.resize = 'none'
+    result.style.display = 'none'
+
+    // 3. set container`s move event
+    charactor.onmousedown = (eDown) => {
         eDown.stopPropagation()
 
-        let disX = eDown.clientX - box.offsetLeft
-        let disY = eDown.clientY - box.offsetTop
+        let disX = eDown.clientX - container.offsetLeft
+        let disY = eDown.clientY - container.offsetTop
 
         document.onmousemove = (eMove) => {
-            box.style.left = eMove.clientX - disX + 'px'
-            box.style.top = eMove.clientY - disY + 'px'
-            box.style.cursor = 'move'
+            // move container
+            container.style.left = eMove.clientX - disX + 'px'
+            container.style.top = eMove.clientY - disY + 'px'
+            charactor.style.cursor = 'move'
         }
     }
-    box.onmouseup = () => {
+    charactor.onmouseup = () => {
         document.onmousemove = null
-        box.style.cursor = 'default'
+        charactor.style.cursor = 'default'
     }
 
-    // append box to the document tree
-    document.body.appendChild(box)
+    // 4. append element to their parent node
+    container.appendChild(charactor)
+    container.appendChild(result)
+    document.body.appendChild(container)
 }
 
 /** @description 翻译并将结果返回 */
@@ -93,41 +118,27 @@ function doTranslate(text, target='翻译中') {
     // }
     let params = '?appid=' + appid + '&salt=' + salt + '&sign=' + sign + '&q=' + text + 'from=auto&to=' + target
 
-    let xhr = new XMLHttpRequest()
-    xhr.open('GET', url + params)
-    xhr.onload = (e) => {
-        console.log(e);
+    // let xhr = new XMLHttpRequest()
+    // xhr.open('GET', url + params)
+    // xhr.onload = (e) => {
+    //     console.log(e);
+    // }
+    // xhr.send()
+
+    let result = 'have not completed yet!'
+
+    // update result and show(if hide)
+    if(document.getElementById('result').style.display == 'none') {
+        document.getElementById('container').style.height = '200px'
+        document.getElementById('result').style.display = 'block'
     }
-    xhr.send()
-}
-
-/** @description 在小人附近创建一个textarea放置结果 */
-function createTranslateDialog() {
-    // create element
-    let dialog = document.createElement('textarea')
-    dialog.disabled = true
-    
-    // set textarea`s style
-    dialog.style.position = 'absolute'
-    dialog.style.zIndex = '10001'
-    dialog.style.width = '200px'
-    dialog.style.height = '80px'
-    dialog.style.padding = '5px'
-    dialog.style.borderRadius = '5px'
-    dialog.style.resize = 'none'
-
-    // append dialog to the document tree
-    document.body.appendChild(dialog)
-
-    // 改: for test
-    dialog.style.top = '10vh'
-    dialog.style.left = '10vw'
-    dialog.innerHTML = '123456gaggaf'
+    document.getElementById('result').value = result
 }
 
 /** @description 在当前窗口的控制台以一定格式打印信息 */
 function _log(type, msg) {
-    console.log('[LOPO]: <' + type + '> ' + JSON.stringify(msg) + '!')
+    let str = (typeof msg) == 'string' ? msg : JSON.stringify(msg)
+    console.log('[LOPO]: <' + type + '> ' + str + '!')
 }
 
 /** @description MD5 */
